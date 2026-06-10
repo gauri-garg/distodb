@@ -6,34 +6,27 @@ statement: select_stmt
          | delete_stmt
          | create_stmt
 
-// SELECT
 select_stmt: SELECT columns FROM NAME [WHERE condition]
 
 columns: STAR | col_list
 col_list: NAME ("," NAME)*
 
-// INSERT
 insert_stmt: INSERT INTO NAME "(" col_list ")" VALUES "(" value_list ")"
 value_list: value ("," value)*
 value: NUMBER | ESCAPED_STRING | NAME
 
-// UPDATE
 update_stmt: UPDATE NAME SET assignment ("," assignment)* [WHERE condition]
 assignment: NAME "=" value
 
-// DELETE
 delete_stmt: DELETE FROM NAME [WHERE condition]
 
-// CREATE TABLE
 create_stmt: CREATE TABLE NAME "(" col_def ("," col_def)* ")"
 col_def: NAME col_type [PRIMARY KEY]
 col_type: INT | TEXT | FLOAT
 
-// WHERE
-condition: NAME op value
-op: "=" | "!=" | ">" | "<" | ">=" | "<="
+condition: NAME OP value
+OP: "!=" | ">=" | "<=" | ">" | "<" | "="
 
-// Case-insensitive keywords as terminals
 SELECT:  /(?i)SELECT/
 INSERT:  /(?i)INSERT/
 INTO:    /(?i)INTO/
