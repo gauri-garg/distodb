@@ -5,8 +5,8 @@ from node.parser import parse_sql
 
 class Executor:
 
-    def __init__(self):
-        self.storage = Storage()
+    def __init__(self, data_dir="data"):
+        self.storage = Storage(data_dir=data_dir)
 
     def run(self, sql):
         try:
@@ -36,7 +36,15 @@ class Executor:
         pk = None
         for col_def in self._rules(stmt, "col_def"):
             col_name = str(col_def.children[0])
-            col_type = str(self._first_rule(col_def).children[0]).upper()
+            col_type_node = self._first_rule(col_def)
+            inner = col_type_node.children[0]
+            if isinstance(inner, Tree) and inner.data == "varchar_type":
+                length = None
+                if len(inner.children) > 1 and inner.children[1] is not None:
+                    length = int(inner.children[1])
+                col_type = f"VARCHAR({length})" if length is not None else "VARCHAR"
+            else:
+                col_type = str(inner).upper()
             is_pk = any(
                 isinstance(c, Token) and c.type == "PRIMARY"
                 for c in col_def.children
@@ -121,6 +129,10 @@ class Executor:
             return float(tok) if "." in str(tok) else int(tok)
         if tok.type == "ESCAPED_STRING":
             return str(tok)[1:-1]
+        if tok.type == "TRUE" or (tok.type == "NAME" and str(tok).upper() == "TRUE"):
+            return True
+        if tok.type == "FALSE" or (tok.type == "NAME" and str(tok).upper() == "FALSE"):
+            return False
         return str(tok)
 
     def _condition(self, node):

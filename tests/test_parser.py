@@ -56,6 +56,17 @@ def test_where_neq():
 def test_where_lte():
     parse_sql("SELECT * FROM products WHERE price <= 999")
 
+def test_parser_bool_types():
+    parse_sql("CREATE TABLE t (id INT PRIMARY KEY, active BOOL, verified BOOLEAN)")
+
+def test_parser_varchar_types():
+    parse_sql("CREATE TABLE t (name VARCHAR PRIMARY KEY, email VARCHAR(100))")
+
+def test_parser_bool_literals():
+    parse_sql("SELECT * FROM users WHERE active = TRUE")
+    parse_sql("SELECT * FROM users WHERE active = FALSE")
+    parse_sql("INSERT INTO users (id, active) VALUES (1, TRUE)")
+
 # ── Invalid queries (must raise errors) ─────────────────────
 
 def test_missing_from():

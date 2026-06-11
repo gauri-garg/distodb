@@ -13,7 +13,7 @@ col_list: NAME ("," NAME)*
 
 insert_stmt: INSERT INTO NAME "(" col_list ")" VALUES "(" value_list ")"
 value_list: value ("," value)*
-value: NUMBER | ESCAPED_STRING | NAME
+value: NUMBER | ESCAPED_STRING | NAME | TRUE | FALSE
 
 update_stmt: UPDATE NAME SET assignment ("," assignment)* [WHERE condition]
 assignment: NAME "=" value
@@ -22,7 +22,8 @@ delete_stmt: DELETE FROM NAME [WHERE condition]
 
 create_stmt: CREATE TABLE NAME "(" col_def ("," col_def)* ")"
 col_def: NAME col_type [PRIMARY KEY]
-col_type: INT | TEXT | FLOAT
+col_type: INT | TEXT | FLOAT | BOOL | BOOLEAN | varchar_type
+varchar_type: VARCHAR ["(" NUMBER ")"]
 
 condition: NAME OP value
 OP: "!=" | ">=" | "<=" | ">" | "<" | "="
@@ -43,6 +44,11 @@ KEY:     /(?i)KEY/
 INT:     /(?i)INT/
 TEXT:    /(?i)TEXT/
 FLOAT:   /(?i)FLOAT/
+VARCHAR: /(?i)VARCHAR/
+BOOL:    /(?i)BOOL/
+BOOLEAN: /(?i)BOOLEAN/
+TRUE:    /(?i)TRUE/
+FALSE:   /(?i)FALSE/
 STAR:    "*"
 
 %import common.CNAME    -> NAME
