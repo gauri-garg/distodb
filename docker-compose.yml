@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+
+  node1:
+    build: .
+    container_name: node1
+    environment:
+      - NODE_ID=node1
+      - PORT=8001
+    ports:
+      - "8001:8001"
+    volumes:
+      - node1_data:/app/data
+    networks:
+      - distodb_net
+
+  node2:
+    build: .
+    container_name: node2
+    environment:
+      - NODE_ID=node2
+      - PORT=8002
+    ports:
+      - "8002:8002"
+    volumes:
+      - node2_data:/app/data
+    networks:
+      - distodb_net
+
+  node3:
+    build: .
+    container_name: node3
+    environment:
+      - NODE_ID=node3
+      - PORT=8003
+    ports:
+      - "8003:8003"
+    volumes:
+      - node3_data:/app/data
+    networks:
+      - distodb_net
+
+volumes:
+  node1_data:
+  node2_data:
+  node3_data:
+
+networks:
+  distodb_net:
+    driver: bridge
