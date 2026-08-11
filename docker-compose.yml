@@ -1,6 +1,23 @@
 version: "3.9"
 
 services:
+  coordinator:
+    build: .
+    container_name: coordinator
+    environment:
+      - PORT=8000
+      - NODE1_URL=http://node1:8001
+      - NODE2_URL=http://node2:8002
+      - NODE3_URL=http://node3:8003
+    ports:
+      - "8000:8000"
+    command: python3 coordinator.py
+    networks:
+      - distodb_net
+    depends_on:
+      - node1
+      - node2
+      - node3
 
   node1:
     build: .
